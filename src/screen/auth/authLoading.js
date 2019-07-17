@@ -20,13 +20,13 @@ export default class AuthLoadingScreen extends React.Component {
   };
 componentWillMount() {
     const config = {
-        apiKey: "AIzaSyDk4kfNQQJl3vGxBdFwbPVj3m_7QM7Ns04",
-        authDomain: "simplechat-d58fc.firebaseapp.com",
-        databaseURL: "https://simplechat-d58fc.firebaseio.com",
-        projectId: "simplechat-d58fc",
-        storageBucket: "",
-        messagingSenderId: "969039521493",
-        appId: "1:969039521493:web:34da4d136e28e0d2"
+      apiKey: "AIzaSyDDBia9FbIGALRaCrpi6dTm2u9n7SitsxU",
+      authDomain: "ashterchat.firebaseapp.com",
+      databaseURL: "https://ashterchat.firebaseio.com",
+      projectId: "ashterchat",
+      storageBucket: "",
+      messagingSenderId: "769846037185",
+      appId: "1:769846037185:web:861871279f19f7ee"
     }
 }
   // Render any loading content that you like here

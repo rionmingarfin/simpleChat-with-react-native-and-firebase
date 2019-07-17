@@ -5,6 +5,7 @@ import Mycarousel from '../../components/carousel';
 import HeaderBack from '../../components/headerBack';
 import firebase from 'firebase'
 import User from '../auth/user'
+import firebaseSvc from './firebaseSvc'
 
 export default class Register extends Component {
     constructor(props) {
@@ -18,32 +19,13 @@ export default class Register extends Component {
         },
             this.random_id()
     }
+    
     random_id = async () => {
         let id = await Math.floor(Math.random() * 10000000) + 1;
         this.setState({
             id_user: id
         })
     }
-    // componentWillMount() {
-    //     AsyncStorage.getItem('email').then(val => {
-    //         if (val) {
-    //             this.setState({email : val})
-    //         }
-    //     })
-    // }
-
-    // handleSubmit = async () => {
-    //     if (this.state.email.length < 5) {
-    //         Alert.alert('plese input password more then 5')
-    //     }else if (this.state.password.length < 6){
-    //         Alert.alert('plese input password more then 6')
-    //     }else {
-    //         await AsyncStorage.setItem('email',this.state.email)
-    //         User.email =this.state.email
-    //         firebase.database().ref('user/001').set({password : this.state.password})
-    //         this.props.navigation.navigate('home')
-    //     }
-    // }
     handleSubmit = async () => {
         if (this.state.phone.length < 10) {
             Alert.alert('eroro input phone')
@@ -54,6 +36,7 @@ export default class Register extends Component {
         } else if (this.state.name.length < 2) {
             Alert.alert('please input password more than 5')
         } else {
+            await createAccount({ name: this.state.name, email: this.state.email, password: this.state.password})
             await AsyncStorage.setItem('phone', this.state.phone)
             User.phone = this.state.phone
             firebase.database().ref('user/' + this.state.id_user).set({ phone: this.state.phone, email: this.state.email, password: this.state.password, name: this.state.name })

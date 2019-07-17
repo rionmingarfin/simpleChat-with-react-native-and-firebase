@@ -3,9 +3,7 @@ import { Text, View, StyleSheet, Image,Alert,AsyncStorage } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Mycarousel from '../../components/carousel';
 import HeaderBack from '../../components/headerBack';
-import firebase from 'firebase'
 import firebaseSvc from './firebaseSvc'
-import User from '../auth/user'
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -14,42 +12,24 @@ export default class Login extends Component {
             password: '',
         };
     }
-
-    
-    handleSubmit = async () => {
-        if (this.state.email.length < 5) {
-            Alert.alert('plese input password more then 5')
-        }else if (this.state.password.length < 6){
-            Alert.alert('plese input password more then 6')
-        }else {
-            await AsyncStorage.setItem('email',this.state.email)
-            User.email =this.state.email
-            firebase.database().ref('user/001').set({password : this.state.password})
-            this.props.navigation.navigate('home')
-        }
-    }
-    // login = async (user, success_callback, failed_callback) => {
-    //     await firebase.auth()
-    //         .signInWithEmailAndPassword(user.email, user.password)
-    //         .then(success_callback, failed_callback);
-    // }
-    // onPressLogin = async () => {
-    //     const user = {
-    //         email: this.state.email,
-    //         password: this.state.password,
-    //     };
-    //     firebaseSvc.login(user, this.loginSuccess, this.loginFailed);
-    // };
-    // loginSuccess = () => {
-    //     console.log('login successful, navigate to chat.');
-    //     this.props.navigation.navigate('home', {
-    //         name: this.state.name,
-    //         email: this.state.email,
-    //     });
-    // };
-    // loginFailed = () => {
-    //     alert('Login failure. Please tried again.');
-    // };
+    onPressLogin = async () => {
+        const users = {
+            email: this.state.email,
+            password: this.state.password,
+        };
+        // console.log(users)
+        firebaseSvc.login(users, this.loginSuccess, this.loginFailed);
+    };
+    loginSuccess = () => {
+        console.log('login successful, navigate to chat.');
+        this.props.navigation.navigate('home', {
+            email: this.state.email,
+            password: this.state.password,
+        });
+    };
+    loginFailed = () => {
+        alert('Login failure. Please tried again.');
+    };
    
     render() {
         return (
@@ -81,7 +61,7 @@ export default class Login extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.parentLogin}>
-                        <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
+                        <TouchableOpacity style={styles.button} onPress={this.onPressLogin}>
                             <Text style={styles.Text}>login</Text>
                         </TouchableOpacity>
                     </View>
