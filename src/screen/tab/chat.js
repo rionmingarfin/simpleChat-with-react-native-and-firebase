@@ -1,20 +1,24 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native'
-import Entypo from 'react-native-vector-icons/dist/Entypo'
-
+import User from '../auth/user'
+import firebase from 'firebase'
+import { withNavigation } from 'react-navigation'
 
 
 class FlatListItem extends Component {
     render() {
+        // console.log('this.props.item')
+        // console.log(this.props.item)
         return (
             <View style={styles.container}>
                 <TouchableOpacity
+                    onPress={() => { this.props.navigation.navigate('detailChat', this.props.item) }}
                     style={styles.button}>
-                        <View style={styles.parenImage}>
-                    <Image
-                        source={{ uri: this.props.item.image }}
-                        style={styles.image} />
-                        </View>
+                    <View style={styles.parenImage}>
+                        <Image
+                            source={{ uri: this.props.item.image }}
+                            style={styles.image} />
+                    </View>
                     <View style={styles.content}>
                         <Text style={styles.TextName}>{this.props.item.name}</Text>
                         <Text style={styles.TexContent}>{this.props.item.content}</Text>
@@ -26,85 +30,31 @@ class FlatListItem extends Component {
 }
 
 class Chat extends Component {
-    DumyData = [
-        {
-            'key': '1',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '2',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '3',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '4',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '5',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '6',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '7',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '8',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '9',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '10',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '11',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-        {
-            'key': '12',
-            "image": "http://golem13.fr/wp-content/uploads/2017/11/chat-double-face-chim%C3%A8re-700x460.jpg",
-            'name' : 'Rion Ming Arfin',
-            'content': 'aku pasti bisa'
-        },
-    ]
+    state = {
+        user: [],
+    }
+    componentWillMount() {
+        let dbRef = firebase.database().ref('user');
+        dbRef.on('child_added', val => {
+            let person = val.val();
+            person.phone = val.key;
+            if (person.phone === User.phone) {
+                User.name = person.name
+            }else{
+                this.setState((prevState) => {
+                    return {
+                        user: [...prevState.user, person]
+                    }
+                })
+            }
+        })
+    }
+
     render() {
         return (
             <View>
                 <FlatList
-                    data={this.DumyData}
+                    data={this.state.user}
                     numColumns={1}
                     renderItem={({ item, index }) => {
                         return (
@@ -124,13 +74,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 4,
         borderBottomWidth: 1,
         borderColor: '#c4c4c4',
-        margin:4,
+        margin: 4,
     },
-    container : {
-        flex :1
+    container: {
+        flex: 1
     },
-    parenImage : {
-        flex :1,
+    parenImage: {
+        flex: 1,
         justifyContent: 'center',
     },
     image: {
@@ -138,17 +88,17 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 100,
     },
-    content : {
-        flex : 4,
+    content: {
+        flex: 4,
         paddingLeft: 17,
     },
-    TexContent : {
+    TexContent: {
         fontSize: 13,
     },
-    TextName : {
+    TextName: {
         fontSize: 17,
-        color :"#1c1c1c"
+        color: "#1c1c1c"
     }
 });
 
-export default Chat
+export default withNavigation(Chat)

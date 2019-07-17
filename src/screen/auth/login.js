@@ -1,10 +1,56 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native'
+import { Text, View, StyleSheet, Image,Alert,AsyncStorage } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Mycarousel from '../../components/carousel';
 import HeaderBack from '../../components/headerBack';
-
+import firebase from 'firebase'
+import firebaseSvc from './firebaseSvc'
+import User from '../auth/user'
 export default class Login extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: '',
+        };
+    }
+
+    
+    handleSubmit = async () => {
+        if (this.state.email.length < 5) {
+            Alert.alert('plese input password more then 5')
+        }else if (this.state.password.length < 6){
+            Alert.alert('plese input password more then 6')
+        }else {
+            await AsyncStorage.setItem('email',this.state.email)
+            User.email =this.state.email
+            firebase.database().ref('user/001').set({password : this.state.password})
+            this.props.navigation.navigate('home')
+        }
+    }
+    // login = async (user, success_callback, failed_callback) => {
+    //     await firebase.auth()
+    //         .signInWithEmailAndPassword(user.email, user.password)
+    //         .then(success_callback, failed_callback);
+    // }
+    // onPressLogin = async () => {
+    //     const user = {
+    //         email: this.state.email,
+    //         password: this.state.password,
+    //     };
+    //     firebaseSvc.login(user, this.loginSuccess, this.loginFailed);
+    // };
+    // loginSuccess = () => {
+    //     console.log('login successful, navigate to chat.');
+    //     this.props.navigation.navigate('home', {
+    //         name: this.state.name,
+    //         email: this.state.email,
+    //     });
+    // };
+    // loginFailed = () => {
+    //     alert('Login failure. Please tried again.');
+    // };
+   
     render() {
         return (
             <View style={{ flex: 1}}>
@@ -14,16 +60,28 @@ export default class Login extends Component {
                 </View>
                 <View style={styles.parentInput}>
                     <TextInput placeholder='username'
-                        style={styles.input} />
+                        style={styles.input}
+                        editable={true}
+                        maxLength={40}
+                        multiline={false}
+                        autoCorrect={false}
+                        onChangeText={(text) => this.setState({ email: text })}
+                        value={this.state.email}/>
+
                     <TextInput placeholder='password'
-                        style={styles.input} />
+                        style={styles.input} 
+                        editable={true}
+                        secureTextEntry={true}
+                        onChangeText={(text) => this.setState({ password: text })}
+                        value={this.state.password} />
+
                     <View style={{ justifyContent: 'flex-end', paddingTop: 10, flexDirection: 'row', }}>
                         <TouchableOpacity style={{ padding: 5 }}>
                             <Text style={styles.Text}>forget password ..?</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.parentLogin}>
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
                             <Text style={styles.Text}>login</Text>
                         </TouchableOpacity>
                     </View>

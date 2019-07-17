@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity } from 'react-native'
+import { Text, View, TouchableOpacity,AsyncStorage } from 'react-native'
 import Entypo from 'react-native-vector-icons/dist/Entypo'
 import Menu, { MenuItem } from 'react-native-material-menu';
 import { withNavigation } from 'react-navigation';
@@ -13,9 +13,10 @@ class Header extends Component {
     showMenu = () => {
         this._menu.show();
     };
-    hideLogout = () => {
-        this._menu.hide();
+    hideLogout = async () => {
+        await AsyncStorage.clear()
         this.props.navigation.navigate('homeAuth')
+        this._menu.hide();
       };
     setting = () => {
         this._menu.hide();

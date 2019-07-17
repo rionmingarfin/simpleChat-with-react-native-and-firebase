@@ -1,10 +1,65 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native'
+import { Text, View, StyleSheet, Image, Alert, AsyncStorage } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Mycarousel from '../../components/carousel';
 import HeaderBack from '../../components/headerBack';
+import firebase from 'firebase'
+import User from '../auth/user'
 
 export default class Register extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            phone: '',
+            email: '',
+            password: '',
+            id_user: '',
+            name: ''
+        },
+            this.random_id()
+    }
+    random_id = async () => {
+        let id = await Math.floor(Math.random() * 10000000) + 1;
+        this.setState({
+            id_user: id
+        })
+    }
+    // componentWillMount() {
+    //     AsyncStorage.getItem('email').then(val => {
+    //         if (val) {
+    //             this.setState({email : val})
+    //         }
+    //     })
+    // }
+
+    // handleSubmit = async () => {
+    //     if (this.state.email.length < 5) {
+    //         Alert.alert('plese input password more then 5')
+    //     }else if (this.state.password.length < 6){
+    //         Alert.alert('plese input password more then 6')
+    //     }else {
+    //         await AsyncStorage.setItem('email',this.state.email)
+    //         User.email =this.state.email
+    //         firebase.database().ref('user/001').set({password : this.state.password})
+    //         this.props.navigation.navigate('home')
+    //     }
+    // }
+    handleSubmit = async () => {
+        if (this.state.phone.length < 10) {
+            Alert.alert('eroro input phone')
+        } else if (this.state.email.length < 4) {
+            Alert.alert('email error')
+        } else if (this.state.password.length < 2) {
+            Alert.alert('please input password more than 5')
+        } else if (this.state.name.length < 2) {
+            Alert.alert('please input password more than 5')
+        } else {
+            await AsyncStorage.setItem('phone', this.state.phone)
+            User.phone = this.state.phone
+            firebase.database().ref('user/' + this.state.id_user).set({ phone: this.state.phone, email: this.state.email, password: this.state.password, name: this.state.name })
+            this.props.navigation.navigate('home')
+        }
+    }
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -14,36 +69,44 @@ export default class Register extends Component {
                         style={styles.image} />
                 </View>
                 <View style={styles.parentInput}>
-                    <TextInput placeholder='fullname'
+                    <TextInput placeholder='name'
                         style={styles.input}
                         editable={true}
                         maxLength={40}
                         multiline={false}
-                        autoCorrect={false}/>
+                        autoCorrect={false}
+                        onChangeText={(text) => this.setState({ name: text })}
+                        value={this.state.name}/>
+                        
+                    <TextInput placeholder='phone'
+                        style={styles.input}
+                        editable={true}
+                        maxLength={40}
+                        multiline={false}
+                        autoCorrect={false}
+                        onChangeText={(text) => this.setState({ phone: text })}
+                        value={this.state.phone}
+                        keyboardType={'phone-pad'} />
 
-                    <TextInput placeholder='username'
+                    <TextInput placeholder='email'
                         style={styles.input}
                         editable={true}
                         maxLength={40}
                         multiline={false}
-                        autoCorrect={false} />
+                        autoCorrect={false}
+                        onChangeText={(text) => this.setState({ email: text })}
+                        value={this.state.email}
+                        keyboardType={'email-address'} />
+
+
                     <TextInput placeholder='password'
-                        style={styles.input} 
-                        editable={true}
+                        style={styles.input}
                         secureTextEntry={true}
-                        maxLength={40}
-                        multiline={false}
-                        autoCorrect={false}/>
-                    <TextInput placeholder='confirm password'
-                        style={styles.input} 
-                        editable={true}
-                        secureTextEntry={true}
-                        maxLength={40}
-                        multiline={false}
-                        autoCorrect={false}/>
-            
+                        onChangeText={(text) => this.setState({ password: text })}
+                        value={this.state.password} />
+
                     <View style={styles.parentRegister}>
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
                             <Text style={styles.Text}>Register</Text>
                         </TouchableOpacity>
                     </View>

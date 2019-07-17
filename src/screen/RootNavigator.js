@@ -3,12 +3,16 @@ import Home from './home';
 import HomeAuth from './auth/homeAuth';
 import Login from './auth/login';
 import Register from './auth/register';
+import AuthLoadingScreen from './auth/authLoading';
+import DetailChat from './detailChat';
 
 const createStack =createStackNavigator({
+    authLoading : {screen : AuthLoadingScreen},
     home : {screen : Home},
     homeAuth : {screen :HomeAuth},
     login : {screen : Login},
-    register: {screen : Register}
+    register: {screen : Register},
+    detailChat : {screen : DetailChat}
 }, {
     headerMode : "none",
     navigationOptions : {
