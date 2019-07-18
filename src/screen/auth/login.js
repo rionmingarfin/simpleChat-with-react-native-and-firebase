@@ -20,8 +20,7 @@ export default class Login extends Component {
         // console.log(users)
         firebaseSvc.login(users, this.loginSuccess, this.loginFailed);
     };
-    loginSuccess = () => {
-        console.log('login successful, navigate to chat.');
+    loginSuccess = async () => {
         this.props.navigation.navigate('home', {
             email: this.state.email,
             password: this.state.password,
@@ -39,14 +38,15 @@ export default class Login extends Component {
                     <Mycarousel/>
                 </View>
                 <View style={styles.parentInput}>
-                    <TextInput placeholder='username'
+                    <TextInput placeholder='email'
                         style={styles.input}
                         editable={true}
                         maxLength={40}
                         multiline={false}
                         autoCorrect={false}
                         onChangeText={(text) => this.setState({ email: text })}
-                        value={this.state.email}/>
+                        value={this.state.email}
+                        keyboardType={'email-address'}/>
 
                     <TextInput placeholder='password'
                         style={styles.input} 
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 5,
         alignItems: 'center',
-        color: '#b8b8b8',
+        color: '#1c1c1c',
         borderColor: '#d6d4d4',
        paddingHorizontal: 20,
     },

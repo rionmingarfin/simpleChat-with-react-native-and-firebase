@@ -15,8 +15,8 @@ export default class AuthLoadingScreen extends React.Component {
   }
 
   _bootstrapAsync = async () => {
-    User.phone= await AsyncStorage.getItem('phone');
-    this.props.navigation.navigate(User.phone ? 'home' : 'homeAuth');
+    let uid= await AsyncStorage.getItem('uid');
+    this.props.navigation.navigate(uid ? 'home' : 'homeAuth');
   };
 componentWillMount() {
     const config = {

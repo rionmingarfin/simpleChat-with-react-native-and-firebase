@@ -20,7 +20,8 @@ export default class Home extends Component {
 		return (
 			<React.Fragment>
 				<Header />
-				<Text>{User.phone}</Text>
+				{/* <Text>{User.phone}</Text> */}
+				{/* <Text>{User.email}</Text> */}
 				<TabView
 					navigationState={this.state}
 					labelStyle={{ backgroundColor: 'red' }}

@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import { AsyncStorage } from 'react-native'
 
 class FirebaseSvc {
   constructor() {
@@ -18,24 +19,28 @@ class FirebaseSvc {
     await firebase.auth()
       .signInWithEmailAndPassword(users.email, users.password)
       .then(success_callback, failed_callback);
+    let userf = firebase.auth().currentUser 
+      await AsyncStorage.setItem('uid', userf.uid);
+      await AsyncStorage.setItem('name', userf.displayName);
+      await AsyncStorage.setItem('avatar', userf.photoURL);
   }
 }
 
-createAccount = async (users) => {
-  firebase.auth()
-    .createUserWithEmailAndPassword(users.email, users.password)
-  .then(function() {
-    var userf = firebase.auth().currentUser;
-    userf.updateProfile({ displayName: users.name})
-    .then(function() {
-      alert("User " + users.name + " was created successfully.");
-    }, function(error) {
-      console.warn("Error update displayName.");
-    });
-  }, function(error) {
-    console.error("got error:" + error.message);
-    alert("Create account failed.");
-  });
-}
+// createAccount = async (users) => {
+//   firebase.auth()
+//     .createUserWithEmailAndPassword(users.email, users.password)
+//   .then(function() {
+//     var userf = firebase.auth().currentUser;
+//     userf.updateProfile({ displayName: users.name})
+//     .then(function() {
+//       alert("User " + users.name + " was created successfully.");
+//     }, function(error) {
+//       console.warn("Error update displayName.");
+//     });
+//   }, function(error) {
+//     console.error("got error:" + error.message);
+//     alert("Create account failed.");
+//   });
+// }
 const firebaseSvc = new FirebaseSvc();
 export default firebaseSvc;

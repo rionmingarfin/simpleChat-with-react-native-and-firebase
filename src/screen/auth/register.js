@@ -11,43 +11,46 @@ export default class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            phone: '',
             email: '',
             password: '',
             id_user: '',
-            name: ''
-        },
-            this.random_id()
+            name: '',
+            image: ''
+        }
+            // this.random_id()
     }
-    
-    random_id = async () => {
-        let id = await Math.floor(Math.random() * 10000000) + 1;
-        this.setState({
-            id_user: id
-        })
-    }
+
+    // random_id = async () => {
+    //     let id = await Math.floor(Math.random() * 10000000) + 1;
+    //     this.setState({
+    //         id_user: id
+    //     })
+    // }
     handleSubmit = async () => {
-        if (this.state.phone.length < 10) {
-            Alert.alert('eroro input phone')
-        } else if (this.state.email.length < 4) {
+        if (this.state.email.length < 4) {
             Alert.alert('email error')
         } else if (this.state.password.length < 2) {
-            Alert.alert('please input password more than 5')
-        } else if (this.state.name.length < 2) {
-            Alert.alert('please input password more than 5')
+            Alert.alert('please input password more than 2')
+        } else if (this.state.name.length < 3) {
+            Alert.alert('please input password more than 3')
+        } else if (this.state.image.length < 4 ) {
+            Alert.alert('please input image more than 4')
         } else {
-            await createAccount({ name: this.state.name, email: this.state.email, password: this.state.password})
-            await AsyncStorage.setItem('phone', this.state.phone)
-            User.phone = this.state.phone
-            firebase.database().ref('user/' + this.state.id_user).set({ phone: this.state.phone, email: this.state.email, password: this.state.password, name: this.state.name })
-            this.props.navigation.navigate('home')
+            firebase.auth()
+                .createUserWithEmailAndPassword(this.state.email, this.state.password)
+                .then(({ user }) => {
+                    var userf = firebase.auth().currentUser;
+                    userf.updateProfile({ displayName: this.state.name })
+                    firebase.database().ref('user/' + user.uid).set({ name: this.state.name,image:this.state.image })
+                })
+            this.props.navigation.navigate('login')
         }
     }
     render() {
         return (
             <View style={{ flex: 1 }}>
                 <HeaderBack navigation={this.props.navigation} />
-                <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center', }}>
+                <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center', }}>
                     <Image source={require('../../assets/grup2.png')}
                         style={styles.image} />
                 </View>
@@ -59,17 +62,16 @@ export default class Register extends Component {
                         multiline={false}
                         autoCorrect={false}
                         onChangeText={(text) => this.setState({ name: text })}
-                        value={this.state.name}/>
-                        
-                    <TextInput placeholder='phone'
+                        value={this.state.name} />
+
+                    <TextInput placeholder='image'
                         style={styles.input}
                         editable={true}
-                        maxLength={40}
-                        multiline={false}
+                        maxLength={200}
+                        multiline={true}
                         autoCorrect={false}
-                        onChangeText={(text) => this.setState({ phone: text })}
-                        value={this.state.phone}
-                        keyboardType={'phone-pad'} />
+                        onChangeText={(text) => this.setState({image: text })}
+                        value={this.state.image} />
 
                     <TextInput placeholder='email'
                         style={styles.input}
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 5,
         alignItems: 'center',
-        color: '#b8b8b8',
+        color: '#1c1c1c',
         borderColor: '#d6d4d4',
         paddingHorizontal: 20,
     },

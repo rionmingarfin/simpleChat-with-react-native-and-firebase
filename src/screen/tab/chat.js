@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native'
+import { Text, View, TouchableOpacity, FlatList, Image, StyleSheet,AsyncStorage } from 'react-native'
 import User from '../auth/user'
 import firebase from 'firebase'
 import { withNavigation } from 'react-navigation'
@@ -7,8 +7,6 @@ import { withNavigation } from 'react-navigation'
 
 class FlatListItem extends Component {
     render() {
-        // console.log('this.props.item')
-        // console.log(this.props.item)
         return (
             <View style={styles.container}>
                 <TouchableOpacity
@@ -33,12 +31,15 @@ class Chat extends Component {
     state = {
         user: [],
     }
-    componentWillMount() {
+   async componentWillMount() {
+        this.setState({
+            myuid : await AsyncStorage.getItem('uid')
+        })
         let dbRef = firebase.database().ref('user');
         dbRef.on('child_added', val => {
             let person = val.val();
-            person.phone = val.key;
-            if (person.phone === User.phone) {
+            person.uid = val.key;
+            if (person.uid === this.state.myuid) {
                 User.name = person.name
             }else{
                 this.setState((prevState) => {
