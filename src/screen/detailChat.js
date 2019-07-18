@@ -3,6 +3,7 @@ import { StyleSheet, AsyncStorage } from 'react-native'
 import firebase from 'firebase'
 import { GiftedChat } from 'react-native-gifted-chat'
 
+
 export default class DetailChat extends Component {
     constructor(props) {
         super(props)
@@ -11,13 +12,29 @@ export default class DetailChat extends Component {
             name: this.props.navigation.state.params.name,
             uid: this.props.navigation.state.params.uid,
             text: '',
-            messageList: []
+            messagesList: [],
+
         }
     }
-    async componentDidMount() {
+    async componentWillMount() {
         this.setState({
-            myuid: await AsyncStorage.getItem('uid')
+            myuid: await AsyncStorage.getItem('uid'),
+            myname: await AsyncStorage.getItem('name'),
+            avatar : await AsyncStorage.getItem('image')
         })
+        console.log('sebelum data')
+        
+            await firebase.database().ref('messages').child(this.state.myuid).child(this.state.uid)
+                .on('child_added', (value) => {
+                    console.log('value ',value)
+                    console.log('value dan val',value.val())
+                    this.setState((previousState) => {
+                        return {
+                            messagesList: GiftedChat.append(previousState.messagesList, value.val()),
+                        }
+                    })
+                    // console.warn(messages)
+                })
     }
     sendMessage = async () => {
         if (this.state.text.length > 0) {
@@ -29,11 +46,10 @@ export default class DetailChat extends Component {
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 user: {
                     _id: this.state.myuid,
-                    name: this.state.name,
+                    name: this.state.myname,
                     avatar : this.state.avatar
                 }
             }
-            console.warn(message)
             updates['messages/' + this.state.myuid + '/' + this.state.uid + '/' + msgId] = message;
             updates['messages/' + this.state.uid + '/' + this.state.myuid + '/' + msgId] = message;
             console.warn(updates)
@@ -41,30 +57,19 @@ export default class DetailChat extends Component {
             this.setState({ text: '' })
 
         }
-    }
-    async componentWillMount() {
-        this.setState({
-            myuid: await AsyncStorage.getItem('uid'),
-            myuid: await AsyncStorage.getItem('name'),
-            myuid: await AsyncStorage.getItem('avatar')
-        })
-        firebase.database().ref().child(this.state.myuid).child(this.state.uid)
-            .on('child_added', (value) => {
-                this.setState((previousState) => {
-                    return {
-                        messageList: GiftedChat.append(previousState.messageList, value.val()),
-                    }
-                })
-            })
+
+        
     }
     render() {
         return (
             <GiftedChat
                 text={this.state.text}
-                messages={this.state.messageList}
+                messages={this.state.messagesList}
                 onSend={this.sendMessage}
                 user={{
                     _id: this.state.uid,
+                    name: this.state.myname,
+                    avatar : this.state.avatar
                 }}
                 onInputTextChanged={(value) => this.setState({ text: value })}
             />

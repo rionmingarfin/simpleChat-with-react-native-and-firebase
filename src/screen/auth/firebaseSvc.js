@@ -22,7 +22,7 @@ class FirebaseSvc {
     let userf = firebase.auth().currentUser 
       await AsyncStorage.setItem('uid', userf.uid);
       await AsyncStorage.setItem('name', userf.displayName);
-      await AsyncStorage.setItem('avatar', userf.photoURL);
+      await AsyncStorage.setItem('image', userf.photoURL);
   }
 }
 

@@ -33,7 +33,7 @@ class Chat extends Component {
     }
    async componentWillMount() {
         this.setState({
-            myuid : await AsyncStorage.getItem('uid')
+            myuid : await AsyncStorage.getItem('uid'),
         })
         let dbRef = firebase.database().ref('user');
         dbRef.on('child_added', val => {
@@ -50,7 +50,6 @@ class Chat extends Component {
             }
         })
     }
-
     render() {
         return (
             <View>
