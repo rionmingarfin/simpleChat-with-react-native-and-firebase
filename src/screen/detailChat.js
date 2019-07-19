@@ -22,7 +22,7 @@ export default class DetailChat extends Component {
             myname: await AsyncStorage.getItem('name'),
             avatar : await AsyncStorage.getItem('image')
         })
-        console.log('sebelum data')
+        // console.log('sebelum data')
         
             await firebase.database().ref('messages').child(this.state.myuid).child(this.state.uid)
                 .on('child_added', (value) => {
@@ -52,7 +52,7 @@ export default class DetailChat extends Component {
             }
             updates['messages/' + this.state.myuid + '/' + this.state.uid + '/' + msgId] = message;
             updates['messages/' + this.state.uid + '/' + this.state.myuid + '/' + msgId] = message;
-            console.warn(updates)
+            // console.warn(updates)
             firebase.database().ref().update(updates)
             this.setState({ text: '' })
 

@@ -6,6 +6,7 @@ import HeaderBack from '../../components/headerBack';
 import firebase from 'firebase'
 import User from '../auth/user'
 import firebaseSvc from './firebaseSvc'
+import Geolocation from '@react-native-community/geolocation';
 
 export default class Register extends Component {
     constructor(props) {
@@ -15,11 +16,28 @@ export default class Register extends Component {
             password: '',
             id_user: '',
             name: '',
-            image: ''
+            image: '',
+            latitude: '',
+            longitude: ''
+
         }
             // this.random_id()
+            this.getLocation()
     }
-
+    getLocation = async()=>{
+        // Geolocation.getCurrentPosition(info => console.log(info));
+          await Geolocation.getCurrentPosition(
+             (position) => {
+               this.setState({
+                 latitude: position.coords.latitude,
+                 longitude: position.coords.longitude,
+                 error: null,
+                });
+             },
+             (error) => this.setState({ error: error.message }),
+             { enableHighAccuracy: false, maximumAge: 1000 },
+           );
+         }
     // random_id = async () => {
     //     let id = await Math.floor(Math.random() * 10000000) + 1;
     //     this.setState({
@@ -41,7 +59,12 @@ export default class Register extends Component {
                 .then(({ user }) => {
                     var userf = firebase.auth().currentUser;
                     userf.updateProfile({ displayName: this.state.name, photoURL :this.state.image})
-                    firebase.database().ref('user/' + user.uid).set({ name: this.state.name,image:this.state.image })
+                    firebase.database().ref('user/' + user.uid).set({ 
+                        name: this.state.name,
+                        image:this.state.image,
+                        latitude: this.state.latitude,
+                        longitude: this.state.longitude
+                    })
                 })
             this.props.navigation.navigate('login')
         }

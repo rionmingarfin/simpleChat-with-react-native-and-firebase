@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import User from './user';
 
+
 export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -15,8 +16,8 @@ export default class AuthLoadingScreen extends React.Component {
   }
 
   _bootstrapAsync = async () => {
-    let uid= await AsyncStorage.getItem('uid');
-    this.props.navigation.navigate(uid ? 'home' : 'homeAuth');
+    User.uid = await AsyncStorage.getItem('uid');
+    this.props.navigation.navigate(User.uid ? 'home' : 'homeAuth');
   };
 componentWillMount() {
     const config = {

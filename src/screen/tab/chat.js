@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, FlatList, Image, StyleSheet,AsyncStorage } from 'react-native'
+import { Text, View, TouchableOpacity, FlatList, Image, StyleSheet, AsyncStorage } from 'react-native'
 import User from '../auth/user'
 import firebase from 'firebase'
 import { withNavigation } from 'react-navigation'
@@ -31,17 +31,16 @@ class Chat extends Component {
     state = {
         user: [],
     }
-   async componentWillMount() {
-        this.setState({
-            myuid : await AsyncStorage.getItem('uid'),
-        })
+    componentWillMount() {
         let dbRef = firebase.database().ref('user');
         dbRef.on('child_added', val => {
             let person = val.val();
             person.uid = val.key;
-            if (person.uid === this.state.myuid) {
+            console.log('user id', User.uid)
+            console.log('user id', User.name)
+            if (person.uid === User.uid) {
                 User.name = person.name
-            }else{
+            } else {
                 this.setState((prevState) => {
                     return {
                         user: [...prevState.user, person]
