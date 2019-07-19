@@ -15,16 +15,16 @@ class FirebaseSvc {
       });
     }
   }
-  login = async (users, success_callback, failed_callback) => {
-    await firebase.auth()
-      .signInWithEmailAndPassword(users.email, users.password)
-      .then(success_callback, failed_callback);
-    let userf = firebase.auth().currentUser 
-      await AsyncStorage.setItem('uid', userf.uid);
-      await AsyncStorage.setItem('name', userf.displayName);
-      await AsyncStorage.setItem('image', userf.photoURL);
-  }
-}
+//   login = async (users, success_callback, failed_callback) => {
+//     await firebase.auth()
+//       .signInWithEmailAndPassword(users.email, users.password)
+//       .then(success_callback, failed_callback);
+//     let userf = firebase.auth().currentUser 
+//       await AsyncStorage.setItem('uid', userf.uid);
+//       await AsyncStorage.setItem('name', userf.displayName);
+//       await AsyncStorage.setItem('image', userf.photoURL);
+//   }
+ }
 
 // createAccount = async (users) => {
 //   firebase.auth()

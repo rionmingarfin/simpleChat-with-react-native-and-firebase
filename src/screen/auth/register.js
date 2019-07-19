@@ -21,23 +21,23 @@ export default class Register extends Component {
             longitude: ''
 
         }
-            // this.random_id()
-            this.getLocation()
+        // this.random_id()
+        this.getLocation()
     }
-    getLocation = async()=>{
+    getLocation = async () => {
         // Geolocation.getCurrentPosition(info => console.log(info));
-          await Geolocation.getCurrentPosition(
-             (position) => {
-               this.setState({
-                 latitude: position.coords.latitude,
-                 longitude: position.coords.longitude,
-                 error: null,
+        await Geolocation.getCurrentPosition(
+            (position) => {
+                this.setState({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    error: null,
                 });
-             },
-             (error) => this.setState({ error: error.message }),
-             { enableHighAccuracy: false, maximumAge: 1000 },
-           );
-         }
+            },
+            (error) => this.setState({ error: error.message }),
+            { enableHighAccuracy: false, maximumAge: 1000 },
+        );
+    }
     // random_id = async () => {
     //     let id = await Math.floor(Math.random() * 10000000) + 1;
     //     this.setState({
@@ -51,17 +51,18 @@ export default class Register extends Component {
             Alert.alert('please input password more than 2')
         } else if (this.state.name.length < 3) {
             Alert.alert('please input password more than 3')
-        } else if (this.state.image.length < 4 ) {
+        } else if (this.state.image.length < 4) {
             Alert.alert('please input image more than 4')
         } else {
             firebase.auth()
                 .createUserWithEmailAndPassword(this.state.email, this.state.password)
                 .then(({ user }) => {
+                    console.log('user',user)
                     var userf = firebase.auth().currentUser;
-                    userf.updateProfile({ displayName: this.state.name, photoURL :this.state.image})
-                    firebase.database().ref('user/' + user.uid).set({ 
+                    userf.updateProfile({ displayName: this.state.name, photoURL: this.state.image })
+                    firebase.database().ref('user/' + user.uid).set({
                         name: this.state.name,
-                        image:this.state.image,
+                        image: this.state.image,
                         latitude: this.state.latitude,
                         longitude: this.state.longitude
                     })
@@ -73,7 +74,7 @@ export default class Register extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <HeaderBack navigation={this.props.navigation} />
-                <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center', }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <Image source={require('../../assets/grup2.png')}
                         style={styles.image} />
                 </View>
@@ -93,7 +94,7 @@ export default class Register extends Component {
                         maxLength={200}
                         multiline={true}
                         autoCorrect={false}
-                        onChangeText={(text) => this.setState({image: text })}
+                        onChangeText={(text) => this.setState({ image: text })}
                         value={this.state.image} />
 
                     <TextInput placeholder='email'
@@ -126,9 +127,11 @@ export default class Register extends Component {
 
 const styles = StyleSheet.create({
     parentInput: {
-        flex: 4,
         paddingHorizontal: 17,
         paddingTop: 10,
+        backgroundColor: '#FFFFFF',
+        zIndex: 999,
+        marginBottom: 10,
     },
     image: {
         height: 250,

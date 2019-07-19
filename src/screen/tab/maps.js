@@ -2,7 +2,6 @@ import React,{Component} from 'react'
 import {View, Text,TouchableOpacity, StyleSheet,Animated,Dimensions,Image,Modal,AsyncStorage,Button}from 'react-native';
 import MapView, {Marker} from 'react-native-maps'
 import Geolocation from '@react-native-community/geolocation';
-import Icon from 'react-native-vector-icons/AntDesign';
 import firebase from 'firebase';
 import User from '../auth/user'
 import { withNavigation } from 'react-navigation'
@@ -30,7 +29,6 @@ class Maps extends Component {
              this.setState({
                latitude: position.coords.latitude,
                longitude: position.coords.longitude,
-               error: null,
              });
            },
            (error) => this.setState({ error: error.message }),
@@ -150,20 +148,20 @@ class Maps extends Component {
                         style={styles.scrollView}
                         contentContainerStyle={styles.endPadding}
                         >
-                        {this.state.data.map((marker, index) => {
-                            if(marker.uid !== User.uid){
+                        {this.state.data.map((item, index) => {
+                            if(item.uid !== User.uid){
                                 return(
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() =>this.props.navigation.navigate('detailChat',item)}>
                                         <View style={styles.card} key={index}>
                                         <Image
-                                            source={{uri: marker.image}}
+                                            source={{uri: item.image}}
                                             style={styles.cardImage}
                                             resizeMode="cover"
                                         />
                                         <View style={styles.textContent}>
-                                            <Text numberOfLines={1} style={styles.cardtitle}>{marker.name}</Text>
+                                            <Text numberOfLines={1} style={styles.cardtitle}>{item.name}</Text>
                                             <Text numberOfLines={1} style={styles.cardDescription}>
-                                            {marker.email}
+                                            {item.email}
                                             </Text>
                                         </View>
                                         </View>
@@ -194,38 +192,6 @@ class Maps extends Component {
 }
 export default withNavigation(Maps)
 const styles = StyleSheet.create({
-    modelstyle:{
-        position:'absolute',
-        top:0,
-        bottom:0,
-        right:0,
-        left:0,
-        justifyContent: 'center', 
-		alignItems: 'center'
-    },
-    imageModal:{
-        width: "80%",
-        height: 180,
-        textAlign: "center",
-        alignSelf: "center",
-        position: "relative",
-        backgroundColor: "#FFF9EC",
-        borderRadius: 5,
-        elevation: 3
-    },
-    images:{
-        marginTop: 10,
-        height:70,
-        width:70,
-        borderRadius:30,
-        alignSelf:'center'
-    },
-    textModal:{
-        textAlign:'center',
-        color:'#0CF60B',
-        marginTop:2,
-        fontWeight:"800"
-    },
     container: {
       ...StyleSheet.absoluteFillObject,
       flex:1,
@@ -266,6 +232,9 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         alignSelf: "center",
+        borderRadius : 100,
+        borderColor :'#d6d4d4',
+        borderWidth:1
     },
     textContent: {
         flex: 1,
@@ -279,49 +248,4 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "#444",
     },
-    markerWrap: {
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    marker: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: "rgba(130,4,150, 0.9)",
-    },
-    ring: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        backgroundColor: "rgba(130,4,150, 0.3)",
-        position: "absolute",
-        borderWidth: 1,
-        borderColor: "rgba(130,4,150, 0.5)",
-    },
-    fab: {
-        position: 'absolute', 
-        width: 58, 
-        height: 57, 
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'center', 
-        left: 10, 
-        top: 20, 
-        backgroundColor: '#FFFCFC', 
-        borderRadius: 50, 
-        elevation: 3
-    },
-    fabRight: {
-        position: 'absolute', 
-        width: 58, 
-        height: 57, 
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'center', 
-        right: 10, 
-        top: 20, 
-        backgroundColor: '#FFFCFC', 
-        borderRadius: 50, 
-        elevation: 3
-    }
    });

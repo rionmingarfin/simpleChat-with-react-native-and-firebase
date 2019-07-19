@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Image, ImageBackground } from 'react-native'
-import HeaderBack from '../components/headerBack';
+import { Text, View, StyleSheet, Image,TouchableOpacity } from 'react-native'
+import Icon from 'react-native-vector-icons/dist/AntDesign';
 
 export default class DetailFriend extends Component {
     render() {
         console.warn(this.props.navigation.state.params)
         return (
             <View style={{ flex: 1 }}>
-                <HeaderBack navigation={this.props.navigation}/>
+                <TouchableOpacity style={styles.back} onPress={() => this.props.navigation.goBack()}>
+                    <Icon style={styles.Text} name='arrowleft' size={37} color='#3b3a3a'></Icon>
+                </TouchableOpacity>
                 <View style={styles.bacImage}>
                     <Image
                         source={{ uri: this.props.navigation.state.params.image }}
@@ -48,6 +50,13 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor : '#6ea0f0'
+        backgroundColor: '#6ea0f0'
+    },
+    back: {
+        marginLeft: 7,
+        marginTop: 7,
+        padding: 10,
+        position: 'absolute',
+        zIndex: 999,
     }
 })

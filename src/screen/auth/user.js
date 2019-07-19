@@ -1,8 +1,8 @@
 const User = {
-    phone: null,
     email: null,
     password: null,
     name: null,
-    uid :null
+    uid :null,
+    image:null
 }
 export default User

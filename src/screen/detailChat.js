@@ -67,7 +67,7 @@ export default class DetailChat extends Component {
                 messages={this.state.messagesList}
                 onSend={this.sendMessage}
                 user={{
-                    _id: this.state.uid,
+                    _id: this.state.myuid,
                     name: this.state.myname,
                     avatar : this.state.avatar
                 }}

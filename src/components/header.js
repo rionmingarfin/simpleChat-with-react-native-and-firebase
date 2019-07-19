@@ -14,9 +14,13 @@ class Header extends Component {
         this._menu.show();
     };
     hideLogout = async () => {
-        await AsyncStorage.clear()
-        this.props.navigation.navigate('homeAuth')
-        this._menu.hide();
+        let keys = ['uid','name','image']
+        await AsyncStorage.multiRemove(keys, (error)=>{
+            this.props.navigation.navigate('homeAuth')
+            this._menu.hide();
+            console.log(error)
+        });
+        
       };
     setting = () => {
         this._menu.hide();

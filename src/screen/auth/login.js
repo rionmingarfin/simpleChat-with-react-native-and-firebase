@@ -1,35 +1,40 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Image,Alert,AsyncStorage } from 'react-native'
+import { Text, View, StyleSheet, Image,Alert,AsyncStorage ,ActivityIndicator} from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Mycarousel from '../../components/carousel';
 import HeaderBack from '../../components/headerBack';
 import firebaseSvc from './firebaseSvc'
+import firebase from 'firebase'
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
             email: '',
             password: '',
+            isLoading:''
         };
     }
     onPressLogin = async () => {
-        const users = {
-            email: this.state.email,
-            password: this.state.password,
-        };
-        // console.log(users)
-        firebaseSvc.login(users, this.loginSuccess, this.loginFailed);
-    };
-    loginSuccess = async () => {
-        this.props.navigation.navigate('home', {
-            email: this.state.email,
-            password: this.state.password,
-        });
-    };
-    loginFailed = () => {
-        alert('Login failure. Please tried again.');
-    };
-   
+
+        await firebase.auth().signInWithEmailAndPassword(this.state.email,this.state.password)
+          .then( async (result) => {
+            console.log('result',result)
+            
+                await AsyncStorage.setItem('uid', result.user.uid);
+                AsyncStorage.getItem('uid',(error,result) => {
+                    if (result) {
+                        this.setState({
+                            email: '',
+                            password: '',
+                            isLoading: false
+                        })
+                        console.log('result dua',result)
+                        this.props.navigation.navigate('home')
+                    }
+                })
+          })
+      }
+
     render() {
         return (
             <View style={{ flex: 1}}>
@@ -65,6 +70,21 @@ export default class Login extends Component {
                             <Text style={styles.Text}>login</Text>
                         </TouchableOpacity>
                     </View>
+                    {
+					this.state.isLoading ? 
+					<View style={{
+						position: 'absolute',
+						justifyContent: 'center',
+						alignSelf: 'center',
+						width: '100%',
+						height: '100%',
+						backgroundColor: 'white'
+					}}>
+						<ActivityIndicator size="large" color="#0FA391" />
+					</View>
+					:
+					<View />
+				}
                     <View style={styles.parentLogin}>
                         <Text style={styles.Text}>----------OR CONNECT WITH----------</Text>
                     </View>

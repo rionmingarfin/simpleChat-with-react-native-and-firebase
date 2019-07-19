@@ -31,19 +31,23 @@ class Chat extends Component {
     state = {
         user: [],
     }
-    componentWillMount() {
-        let dbRef = firebase.database().ref('user');
-        dbRef.on('child_added', val => {
-            let person = val.val();
-            person.uid = val.key;
-            console.log('user id', User.uid)
-            console.log('user id', User.name)
-            if (person.uid === User.uid) {
-                User.name = person.name
-            } else {
-                this.setState((prevState) => {
-                    return {
-                        user: [...prevState.user, person]
+    async componentWillMount() { 
+        AsyncStorage.getItem('uid',(error,result) => {
+            if (result) {
+                firebase.database().ref('user').on('child_added',val => {
+                    const person = val.val();
+                    person.uid = val.key;
+                    if (person.uid === result) {
+                        User.name = person
+                        console.log('user',User.name)
+                        console.log('person',person)
+                    }else{
+                        this.setState((prevState) => {
+                            console.log('pevstae',prevState)
+                            return {
+                                user: [...prevState.user, person]
+                            }
+                        })
                     }
                 })
             }
