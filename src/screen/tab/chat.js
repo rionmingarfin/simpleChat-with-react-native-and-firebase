@@ -39,8 +39,6 @@ class Chat extends Component {
                     person.uid = val.key;
                     if (person.uid === result) {
                         User.name = person
-                        console.log('user',User.name)
-                        console.log('person',person)
                     }else{
                         this.setState((prevState) => {
                             console.log('pevstae',prevState)

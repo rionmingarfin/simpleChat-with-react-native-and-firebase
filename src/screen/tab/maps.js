@@ -36,14 +36,14 @@ class Maps extends Component {
          );
        }
 
-    updateLocation = async() =>{
-        if (this.state.latitude) {
-            await firebase.database().ref('user/'+ User.uid).update({
-                latitude: this.state.latitude,
-                longitude: this.state.longitude
-            })
-        }
-    }
+    // updateLocation = async() =>{
+    //     if (this.state.latitude) {
+    //         await firebase.database().ref('user/'+ User.uid).update({
+    //             latitude: this.state.latitude,
+    //             longitude: this.state.longitude
+    //         })
+    //     }
+    // }
 
     componentWillMount() {
         this.index = 0;
@@ -95,7 +95,7 @@ class Maps extends Component {
 
     render(){
         if (this.state.latitude) {
-            this.updateLocation()  
+            // this.updateLocation()  
             return(
                 
                 <View style={styles.container}>

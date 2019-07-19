@@ -17,14 +17,10 @@ class Header extends Component {
         let keys = ['uid','name','image']
         await AsyncStorage.multiRemove(keys, (error)=>{
             this.props.navigation.navigate('homeAuth')
-            this._menu.hide();
+            // this._menu.hide();
             console.log(error)
         });
         
-      };
-    setting = () => {
-        this._menu.hide();
-        this.props.navigation.navigate('homeAuth')
       };
     render() {
         return (
@@ -38,7 +34,6 @@ class Header extends Component {
                         <Entypo name='dots-three-vertical' size={25} color='#f5f6f7' />
                     </Text>}
                 >
-                    <MenuItem onPress={this.setting}>setting</MenuItem>
                     <MenuItem onPress={this.hideLogout}>log out</MenuItem>
                 </Menu>
             </View>

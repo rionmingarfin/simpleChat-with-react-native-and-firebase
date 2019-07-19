@@ -1,4 +1,4 @@
-import { createAppContainer,createStackNavigator } from 'react-navigation'
+import { createAppContainer,createStackNavigator ,createSwitchNavigator} from 'react-navigation'
 import Home from './home';
 import HomeAuth from './auth/homeAuth';
 import Login from './auth/login';
@@ -8,11 +8,7 @@ import DetailChat from './detailChat';
 import DetailFriend from './detailFriend';
 
 const createStack =createStackNavigator({
-    authLoading : {screen : AuthLoadingScreen},
     home : {screen : Home},
-    homeAuth : {screen :HomeAuth},
-    login : {screen : Login},
-    register: {screen : Register},
     detailChat : {screen : DetailChat},
     detailFriend : {screen : DetailFriend}
 }, {
@@ -21,5 +17,24 @@ const createStack =createStackNavigator({
         headerVisible : false
     }
 })
+const stackAuth = createStackNavigator({
+    homeAuth : {screen :HomeAuth},
+    login : {screen : Login},
+    register: {screen : Register},
+},{
+    headerMode : "none",
+    navigationOptions : {
+        headerVisible : false
+    }
+})
 
-export default Appcontainer = createAppContainer(createStack)
+const createSwitch =createSwitchNavigator({
+    authLoading : {screen : AuthLoadingScreen},
+    App : createStack,
+    Auth : stackAuth
+
+},{
+    initialRouteName : 'authLoading'
+})
+
+export default Appcontainer = createAppContainer(createSwitch)

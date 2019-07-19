@@ -17,27 +17,27 @@ export default class Register extends Component {
             id_user: '',
             name: '',
             image: '',
-            latitude: '',
-            longitude: ''
+            // latitude: '',
+            // longitude: ''
 
         }
         // this.random_id()
-        this.getLocation()
+        // this.getLocation()
     }
-    getLocation = async () => {
-        // Geolocation.getCurrentPosition(info => console.log(info));
-        await Geolocation.getCurrentPosition(
-            (position) => {
-                this.setState({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    error: null,
-                });
-            },
-            (error) => this.setState({ error: error.message }),
-            { enableHighAccuracy: false, maximumAge: 1000 },
-        );
-    }
+    // getLocation = async () => {
+    //     // Geolocation.getCurrentPosition(info => console.log(info));
+    //     await Geolocation.getCurrentPosition(
+    //         (position) => {
+    //             this.setState({
+    //                 latitude: position.coords.latitude,
+    //                 longitude: position.coords.longitude,
+    //                 error: null,
+    //             });
+    //         },
+    //         (error) => this.setState({ error: error.message }),
+    //         { enableHighAccuracy: false, maximumAge: 1000 },
+    //     );
+    // }
     // random_id = async () => {
     //     let id = await Math.floor(Math.random() * 10000000) + 1;
     //     this.setState({
@@ -54,7 +54,7 @@ export default class Register extends Component {
         } else if (this.state.image.length < 4) {
             Alert.alert('please input image more than 4')
         } else {
-            firebase.auth()
+           await firebase.auth()
                 .createUserWithEmailAndPassword(this.state.email, this.state.password)
                 .then(({ user }) => {
                     console.log('user',user)
@@ -63,8 +63,8 @@ export default class Register extends Component {
                     firebase.database().ref('user/' + user.uid).set({
                         name: this.state.name,
                         image: this.state.image,
-                        latitude: this.state.latitude,
-                        longitude: this.state.longitude
+                        // latitude: this.state.latitude,
+                        // longitude: this.state.longitude
                     })
                 })
             this.props.navigation.navigate('login')

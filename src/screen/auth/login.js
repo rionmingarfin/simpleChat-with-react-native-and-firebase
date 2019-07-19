@@ -5,6 +5,7 @@ import Mycarousel from '../../components/carousel';
 import HeaderBack from '../../components/headerBack';
 import firebaseSvc from './firebaseSvc'
 import firebase from 'firebase'
+import User from '../auth/user'
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -13,15 +14,40 @@ export default class Login extends Component {
             password: '',
             isLoading:''
         };
+        // this.getLocation()
+        // this.updateLocation()
     }
+    // getLocation = async () => {
+    //     // Geolocation.getCurrentPosition(info => console.log(info));
+    //     await Geolocation.getCurrentPosition(
+    //         (position) => {
+    //             this.setState({
+    //                 latitude: position.coords.latitude,
+    //                 longitude: position.coords.longitude,
+    //                 error: null,
+    //             });
+    //         },
+    //         (error) => this.setState({ error: error.message }),
+    //         { enableHighAccuracy: false, maximumAge: 1000 },
+    //     );
+    // }
+    // updateLocation = async() =>{
+    //     if (this.state.latitude) {
+    //         await firebase.database().ref('user/'+ User.uid).update({
+    //             latitude: this.state.latitude,
+    //             longitude: this.state.longitude
+    //         })
+    //     }
+    // }
     onPressLogin = async () => {
 
         await firebase.auth().signInWithEmailAndPassword(this.state.email,this.state.password)
           .then( async (result) => {
             console.log('result',result)
-            
+
                 await AsyncStorage.setItem('uid', result.user.uid);
                 AsyncStorage.getItem('uid',(error,result) => {
+                    console.log('result',result)
                     if (result) {
                         this.setState({
                             email: '',

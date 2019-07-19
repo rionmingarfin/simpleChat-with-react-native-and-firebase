@@ -6,22 +6,52 @@ import Chat from './tab/chat'
 import Friend from './tab/friend'
 import Maps from './tab/maps'
 import User from './auth/user';
-export default class Home extends Component {
-	state = {
-		index: 0,
-		routes: [
-			{ key: 'Chat', title: 'Chat' },
-			{ key: 'Friend', title: 'Friend' },
-			{ key: 'Maps', title: 'Maps' },
-		],
-	};
+import Geolocation from '@react-native-community/geolocation';
+import firebase from 'firebase'
 
+export default class Home extends Component {
+	constructor(props){
+		super(props)
+		this.state = {
+			index: 0,
+			routes: [
+				{ key: 'Chat', title: 'Chat' },
+				{ key: 'Friend', title: 'Friend' },
+				{ key: 'Maps', title: 'Maps' },
+			],
+		}
+		this.getLocation()
+	}
+	getLocation = async () => {
+		Geolocation.getCurrentPosition(info =>{
+			this.setState({
+				latitude:info.coords.latitude,
+				longitude: info.coords.longitude
+			})
+		});
+		console.log('masuk')
+	}
+	updateLocation = async() =>{
+		AsyncStorage.getItem('uid',(error,result) => {
+			if(result) {
+				// console.log('result id',result)
+				if (this.state.latitude) {
+					console.log('this',this.state.latitude)
+					 firebase.database().ref('user/'+ result).update({
+						latitude: this.state.latitude,
+						longitude: this.state.longitude
+					})
+		
+				}
+			}
+		}
+	)
+}
 	render() {
+		this.updateLocation()
 		return (
 			<React.Fragment>
 				<Header />
-				{/* <Text>{User.phone}</Text> */}
-				{/* <Text>{User.email}</Text> */}
 				<TabView
 					navigationState={this.state}
 					labelStyle={{ backgroundColor: 'red' }}
