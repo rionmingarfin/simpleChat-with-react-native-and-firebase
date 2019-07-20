@@ -11,8 +11,6 @@
 <br>
 <br>
 
-## RELATED PROJECT
-express js (https://github.com/rionmingarfin/simple_note_expressjs.git)
 ## GETING STARTED
 [![React Native](https://img.shields.io/badge/React%20Native-0.59.9-blue.svg?style=rounded-square)](https://facebook.github.io/react-native/)
 
